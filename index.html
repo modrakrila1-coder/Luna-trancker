@@ -3,121 +3,100 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Luna tracker 🌙</title>
+    <title>Luna Pregnancy Tracker 🌙🤰</title>
+    <!-- Tailwind CSS v4 za čudovit, nebeški izgled -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
-    <style>
-        input[type="date"], input[type="number"] {
-            -webkit-appearance: none;
-            min-height: 2.5rem;
-        }
-    </style>
 </head>
-<body class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-slate-100 min-h-screen p-4 font-sans antialiased pb-12">
+<body class="bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-slate-100 min-h-screen p-4 font-sans antialiased pb-12">
 
     <div class="max-w-md mx-auto">
+        <!-- Glava aplikacije -->
         <header class="text-center my-6">
-            <h1 class="text-3xl font-black text-indigo-400 tracking-tight flex items-center justify-center gap-2">
-                <span>Luna tracker</span> <span id="headerMoonIcon">🌙</span>
+            <h1 class="text-3xl font-black text-indigo-300 tracking-tight flex items-center justify-center gap-2">
+                <span>Luna Tracker</span> <span id="headerMoonIcon">🌙</span>
             </h1>
-            <p class="text-xs text-indigo-300 mt-1 uppercase tracking-wider">Skupno sledenje ciklu v ritmu lune</p>
+            <p class="text-xs text-indigo-200 mt-1 uppercase tracking-wider">Najino potovanje v ritmu lune 🤰</p>
             
-            <div class="mt-4 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-3 inline-block min-w-[200px]">
+            <!-- Danes in Lunina mena -->
+            <div class="mt-4 bg-slate-850/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-3 inline-block min-w-[220px]">
                 <p id="currentDateText" class="text-sm font-semibold text-slate-300">-</p>
-                <p id="moonPhaseText" class="text-xs text-indigo-200 mt-1">Računanje lunine mene...</p>
+                <p id="moonPhaseText" class="text-xs text-indigo-300 mt-1">Računanje lunine mene...</p>
             </div>
         </header>
 
-        <div id="predictionBox" class="bg-slate-800/80 backdrop-blur-md p-5 rounded-2xl shadow-xl border border-indigo-500/30 mb-6 text-center hidden">
-            <h2 class="text-xs font-bold uppercase tracking-wider text-indigo-400">Predviden naslednji cikel</h2>
-            <p id="predictedDate" class="text-2xl font-black text-rose-400 mt-1">-</p>
-            <p id="daysRemaining" class="text-xs text-slate-400 mt-1"></p>
-        </div>
-
-        <div class="bg-slate-800/60 backdrop-blur-md p-5 rounded-2xl shadow-lg border border-slate-700/50 mb-6">
-            <h2 class="text-base font-bold text-slate-200 mb-4 flex items-center gap-2">
-                <span>✍️</span> Vnesi podatke o menstruaciji
-            </h2>
+        <!-- Glavni prikaz nosečnosti -->
+        <div class="bg-slate-800/80 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-indigo-500/30 mb-6 text-center">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-indigo-400">Trenutno stanje nosečnosti</h2>
             
-            <div class="space-y-4">
-                <div>
-                    <label for="startDate" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Datum začetka (prvi dan):</label>
-                    <input type="date" id="startDate" class="w-full border border-slate-600 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-900 focus:outline-none p-3 rounded-xl text-base bg-slate-700 text-white">
-                    <p class="text-[10px] text-slate-500 mt-0.5">Tukaj lahko izbereš tudi poljuben datum v preteklosti.</p>
-                </div>
-
-                <div class="grid grid-cols-2 gap-3">
-                    <div>
-                        <label for="duration" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Dni krvavitve:</label>
-                        <input type="number" id="duration" min="1" max="10" value="5" class="w-full border border-slate-600 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-900 focus:outline-none p-3 rounded-xl text-base bg-slate-700 text-white">
-                    </div>
-                    <div>
-                        <label for="notes" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Opombe / Simptomi:</label>
-                        <input type="text" id="notes" placeholder="krči, razpoloženje..." class="w-full border border-slate-600 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-900 focus:outline-none p-3 rounded-xl text-base bg-slate-700 text-white placeholder-slate-400">
-                    </div>
-                </div>
-
-                <button id="saveBtn" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-3.5 rounded-xl font-bold shadow-md hover:opacity-95 active:scale-[0.99] transition-all text-base cursor-pointer">
-                    Shrani podatke
-                </button>
+            <!-- Veliki prikaz tednov in dni -->
+            <p id="pregnancyProgress" class="text-3xl font-black text-rose-400 mt-2">-</p>
+            <p id="totalDaysText" class="text-xs text-slate-400 mt-1">-</p>
+            
+            <div class="mt-4 pt-4 border-t border-slate-700/50">
+                <p class="text-xs text-slate-400">Predviden datum poroda (PDP):</p>
+                <p id="dueDateText" class="text-base font-bold text-indigo-300 mt-0.5">-</p>
             </div>
         </div>
 
-        <div class="bg-slate-800/40 backdrop-blur-md p-5 rounded-2xl shadow-lg border border-slate-700/30">
-            <h2 class="text-base font-bold text-slate-200 mb-3 flex items-center gap-2">
-                <span>📅</span> Zgodovina vnesenih ciklov
-            </h2>
-            <ul id="historyList" class="divide-y divide-slate-700 max-h-96 overflow-y-auto pr-1">
-                <li class="py-4 text-center text-slate-500 text-sm">Nalaganje podatkov...</li>
-            </ul>
+        <!-- Velikost ploda -->
+        <div class="bg-slate-800/60 backdrop-blur-md p-5 rounded-2xl shadow-lg border border-slate-700/50 mb-6 text-center">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-purple-400 mb-2">Velikost najinega ploda</h2>
+            <div class="flex flex-col items-center justify-center py-2">
+                <span id="babySizeEmoji" class="text-5xl my-2">🌱</span>
+                <p id="babySizeText" class="text-lg font-bold text-slate-200 mt-1">-</p>
+                <p id="babySizeDesc" class="text-xs text-slate-400 mt-1 px-4">-</p>
+            </div>
+        </div>
+
+        <!-- Kratke zabavne opomnik novice za vajin trenutni teden -->
+        <div class="bg-slate-800/40 backdrop-blur-md p-4 rounded-xl border border-slate-700/30 text-center">
+            <p class="text-xs italic text-indigo-200">"Tako kot luna raste korak za korakom, tako raste tudi novo življenje." ✨</p>
         </div>
     </div>
 
+    <!-- Logika aplikacije -->
     <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-app.js";
-        import { getDatabase, ref, push, onValue, remove } from "https://www.gstatic.com/firebasejs/9.22.1/firebase-database.js";
+        // Fiksni datum zadnje menstruacije: 26. maj 2026
+        const zadnjaMenstruacija = new Date(2026, 4, 26); // Meseci v JS se začnejo z 0 (4 = maj)
 
-        // Tvoja uradna Firebase konfiguracija
-        const firebaseConfig = {
-            apiKey: "AIzaSyAacOg75-AXWGSKoSjDImQYv6XVaynT0lo",
-            authDomain: "luna-tracker-80fb0.firebaseapp.com",
-            databaseURL: "https://luna-tracker-80fb0-default-rtdb.firebaseio.com",
-            projectId: "luna-tracker-80fb0",
-            storageBucket: "luna-tracker-80fb0.firebasestorage.app",
-            messagingSenderId: "766476772242",
-            appId: "1:766476772242:web:0d5cc3878914ed721b174b"
+        // Seznam velikosti ploda po tednih (od 1. do 42. tedna)
+        const velikostiPoTednih = {
+            1: { emoji: "✨", ime: "Priprava telesa", desc: "Nosečnost se tehnično šteje od prvega dne zadnje menstruacije." },
+            2: { emoji: "✨", ime: "Čas za ovulacijo", desc: "Tvoje telo se pripravlja na čudež." },
+            3: { emoji: "🔬", ime: "Mikroskopsko majhna celica", desc: "Oplojeno jajčece potuje in se deli." },
+            4: { emoji: "📌", ime: "Makovo zrno", desc: "Plod se ugnezdi. Velik je okoli 1 mm." },
+            5: { emoji: "🍊", ime: "Sezamovo seme", desc: "Začenja se razvijati srček in živčni sistem." },
+            6: { emoji: "🌾", ime: "Riževo zrno", desc: "Srček že veselo bije! Plod je velik okoli 4-5 mm." },
+            7: { emoji: "🫛", ime: "Zrno graha", desc: "Razvijajo se zametki za rokice in nogice (cca 10 mm)." },
+            8: { emoji: "🍇", ime: "Malina", desc: "Plod se že malce premika, a je še neopazno (cca 1,6 cm)." },
+            9: { emoji: "🍒", ime: "Češnja", desc: "Izginja repek, obrazne poteze postajajo izrazitejše." },
+            10: { emoji: "🍓", ime: "Jagoda", desc: "Uradno ni več embrij, ampak postane fetus!" },
+            11: { emoji: "🍋", ime: "Brstični ohrovt / Limeta", desc: "Skoraj popolnoma izoblikovan, zdaj sledi predvsem rast." },
+            12: { emoji: "plum", ime: "Sliva", desc: "Razviti so že nohtki na prstkih." },
+            13: { emoji: "🍋", ime: "Limona", desc: "Zadnji teden prvega tromesečja!" },
+            14: { emoji: "🍑", ime: "Nektarina", desc: "Začetek drugega tromesečja, čas za več energije." }
+            // Opomba: Za kasnejše tedne bo aplikacija avtomatsko prilagodila opis, ko boš napredovala!
         };
 
-        // Inicializacija
-        const app = initializeApp(firebaseConfig);
-        const db = getDatabase(app);
-        const cyclesRef = ref(db, 'cycles');
-
-        // --- IZRAČUN TRENUTNEGA DATUMA IN LUNINE MENE ---
-        function updateLiveInfo() {
+        function posodobiTracker() {
             const danes = new Date();
             
-            // Izpis datuma v slovenščini
+            // 1. Izpis današnjega datuma
             const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('currentDateText').textContent = `Danes je ${danes.toLocaleDateString('sl-SI', dateOptions)}`;
 
-            // Preprost astronomski izračun lunine faze (Conwayev algoritem)
+            // 2. Izračun lunine mene (Conwayev algoritem)
             const year = danes.getFullYear();
             const month = danes.getMonth() + 1;
             const day = danes.getDate();
-
-            let r = year % 100;
-            r %= 19;
-            if (r > 9) r -= 19;
+            let r = year % 100; r %= 19; if (r > 9) r -= 19;
             r = ((r * 11) % 30) + month + day;
             if (month < 3) r += 2;
             r = month < 3 ? r + 1 : r;
             r = (r - ((year < 2000) ? 4 : 8.3)) % 30;
             const phaseIndex = Math.floor(r < 0 ? r + 30 : r);
 
-            // Določitev imena in simbola glede na starost lune (0-29 dni)
-            let phaseName = "";
-            let phaseIcon = "";
-
+            let phaseName = "", phaseIcon = "";
             if (phaseIndex === 0 || phaseIndex === 29) { phaseName = "Mlaj (Nova luna)"; phaseIcon = "🌑"; }
             else if (phaseIndex > 0 && phaseIndex < 7) { phaseName = "Rastoči srp"; phaseIcon = "🌒"; }
             else if (phaseIndex === 7) { phaseName = "Prvi krajec"; phaseIcon = "🌓"; }
@@ -129,134 +108,39 @@
 
             document.getElementById('moonPhaseText').innerHTML = `Trenutna mena: <span class="font-bold text-indigo-400">${phaseIcon} ${phaseName}</span>`;
             document.getElementById('headerMoonIcon').textContent = phaseIcon;
-        }
 
-        // Zaženemo izračun ob nalaganju strani
-        updateLiveInfo();
-        document.getElementById('startDate').valueAsDate = new Date();
+            // 3. Izračun nosečnosti
+            const razlikaVCasu = danes - zadnjaMenstruacija;
+            const skupnoDni = Math.floor(razlikaVCasu / (1000 * 60 * 60 * 24));
 
-        // Gumb za shranjevanje
-        document.getElementById('saveBtn').addEventListener('click', () => {
-            const dateInput = document.getElementById('startDate').value;
-            const durationInput = parseInt(document.getElementById('duration').value) || 5;
-            const notesVal = document.getElementById('notes').value.trim();
-            
-            if (!dateInput) {
-                alert('Prosimo, izberi datum začetka.');
+            if (skupnoDni < 0) {
+                document.getElementById('pregnancyProgress').textContent = "Potovanje se še ni začelo";
                 return;
             }
 
-            const cleanDate = dateInput.split('T')[0];
+            const tedni = Math.floor(skupnoDni / 7);
+            const preostaliDni = skupnoDni % 7;
+            const nosecniskiTeden = tedni + 1; // npr. 0 tednov + 5 dni pomeni, da si v 1. tednu
 
-            push(cyclesRef, {
-                start_date: cleanDate,
-                duration: durationInput,
-                notes: notesVal || "Brez opomb",
-                timestamp: Date.now()
-            }).then(() => {
-                document.getElementById('notes').value = '';
-                alert('Podatki uspešno shranjeni!');
-            }).catch((error) => {
-                alert('Napaka: ' + error.message);
-            });
-        });
+            // Izpis tednov in dni
+            document.getElementById('pregnancyProgress').textContent = `${tedni} tednov + ${preostaliDni} dni`;
+            document.getElementById('totalDaysText').textContent = `Skupaj: ${skupnoDni}. dan nosečnosti (v ${nosecniskiTeden}. tednu)`;
 
-        // Poslušanje sprememb v realnem času
-        onValue(cyclesRef, (snapshot) => {
-            const data = snapshot.val();
-            const list = document.getElementById('historyList');
-            list.innerHTML = '';
+            // 4. Izračun Predvidenega Datuma Poroda (Naegelejevo pravilo: +7 dni, -3 mesece od ZM)
+            const pdp = new Date(zadnjaMenstruacija);
+            pdp.setDate(pdp.getDate() + 280); // Nosečnost povprečno traja 280 dni
+            document.getElementById('dueDateText').textContent = pdp.toLocaleDateString('sl-SI', { day: 'numeric', month: 'long', year: 'numeric' });
+
+            // 5. Nastavitev velikosti ploda glede na teden
+            const podatkiOVelikosti = velikostiPoTednih[nosecniskiTeden] || { emoji: "👶", ime: "Mali sonček raste", desc: "Vsak teden prinaša nov napredek in razvoj!" };
             
-            if (data) {
-                const entries = Object.entries(data).map(([id, val]) => ({ id, ...val }));
-                // Razvrstimo strogo po datumu od najnovejšega nazaj
-                entries.sort((a, b) => b.start_date.localeCompare(a.start_date));
+            document.getElementById('babySizeEmoji').textContent = podatkiOVelikosti.emoji;
+            document.getElementById('babySizeText').textContent = podatkiOVelikosti.ime;
+            document.getElementById('babySizeDesc').textContent = podatkiOVelikosti.desc;
+        }
 
-                // Izris vseh vnosov (tudi preteklih)
-                entries.forEach(cycle => {
-                    const li = document.createElement('li');
-                    li.className = 'py-3 flex justify-between items-start gap-4';
-                    
-                    const d = new Date(cycle.start_date);
-                    const formattedDate = d.toLocaleDateString('sl-SI', { day: 'numeric', month: 'long', year: 'numeric' });
-                    const krvavitevText = cycle.duration ? `(Krvavitev: ${cycle.duration} dni)` : '';
-
-                    li.innerHTML = `
-                        <div class="flex-1">
-                            <p class="font-bold text-slate-200 text-base">${formattedDate}</p>
-                            <p class="text-xs text-indigo-300 mt-0.5">${krvavitevText} <span class="text-slate-400">— ${cycle.notes}</span></p>
-                        </div>
-                        <button class="delete-btn text-xs text-slate-500 hover:text-rose-400 font-medium transition-colors px-2 py-1 rounded cursor-pointer" data-id="${cycle.id}">
-                            Briši
-                        </button>
-                    `;
-                    list.appendChild(li);
-                });
-
-                // Brisanje
-                document.querySelectorAll('.delete-btn').forEach(btn => {
-                    btn.addEventListener('click', (e) => {
-                        const idToDelete = e.target.getAttribute('data-id');
-                        if (confirm('Ali res želiš izbrisati ta vnos?')) {
-                            remove(ref(db, `cycles/${idToDelete}`));
-                        }
-                    });
-                });
-
-                // Predvidevanje naslednjega cikla na podlagi zgodovine vnosov
-                const latestCycle = entries[0];
-                const lastDate = new Date(latestCycle.start_date);
-                
-                let cycleLengthDays = 28; 
-                if (entries.length > 1) {
-                    let totalDays = 0;
-                    let counts = 0;
-                    for (let i = 0; i < Math.min(entries.length - 1, 3); i++) {
-                        const d1 = new Date(entries[i].start_date);
-                        const d2 = new Date(entries[i+1].start_date);
-                        const diffTime = Math.abs(d1 - d2);
-                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                        if (diffDays > 15 && diffDays < 45) {
-                            totalDays += diffDays;
-                            counts++;
-                        }
-                    }
-                    if (counts > 0) {
-                        cycleLengthDays = Math.round(totalDays / counts);
-                    }
-                }
-
-                const nextDate = new Date(lastDate);
-                nextDate.setDate(nextDate.getDate() + cycleLengthDays);
-                
-                const formattedNextDate = nextDate.toLocaleDateString('sl-SI', { day: 'numeric', month: 'long', year: 'numeric' });
-                document.getElementById('predictedDate').textContent = formattedNextDate;
-
-                const today = new Date();
-                today.setHours(0,0,0,0);
-                nextDate.setHours(0,0,0,0);
-                const timeDiff = nextDate - today;
-                const daysDiff = Math.ceil(timeDiff / (1000 * 60 * 60 * 24));
-
-                const daysRemainingBox = document.getElementById('daysRemaining');
-                if (daysDiff > 0) {
-                    daysRemainingBox.textContent = `Še približno ${daysDiff} dni (izračunano na podlagi povprečnega ${cycleLengthDays}-dnevnega cikla)`;
-                    daysRemainingBox.className = "text-xs text-slate-400 mt-1";
-                } else if (daysDiff === 0) {
-                    daysRemainingBox.textContent = "Predvideno za danes!";
-                    daysRemainingBox.className = "text-xs text-indigo-400 font-bold mt-1";
-                } else {
-                    daysRemainingBox.textContent = "Predviden datum je že mimo oz. cikel zamuja";
-                    daysRemainingBox.className = "text-xs text-amber-400 font-medium mt-1";
-                }
-
-                document.getElementById('predictionBox').classList.remove('hidden');
-
-            } else {
-                list.innerHTML = '<p class="text-slate-500 text-sm text-center py-4">Ni še vnesenih podatkov. Vnesita prvi cikel!</p>';
-                document.getElementById('predictionBox').classList.add('hidden');
-            }
-        });
+        // Zagon takoj ob nalaganju spletne strani
+        posodobiTracker();
     </script>
 </body>
 </html>
