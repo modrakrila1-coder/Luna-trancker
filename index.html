@@ -3,58 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Najin Koledarček Cikla 🌸</title>
+    <title>Luna tracker 🌙</title>
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        /* Izboljšava za lepši prikaz vnosnih polj na pametnih telefonih */
-        input[type="date"] {
+        input[type="date"], input[type="number"] {
             -webkit-appearance: none;
             min-height: 2.5rem;
         }
     </style>
 </head>
-<body class="bg-gradient-to-br from-pink-50 to-rose-100 text-gray-800 min-h-screen p-4 font-sans antialiased pb-12">
+<body class="bg-gradient-to-br from-slate-900 via-indigo-950 to-slate-900 text-slate-100 min-h-screen p-4 font-sans antialiased pb-12">
 
     <div class="max-w-md mx-auto">
         <header class="text-center my-6">
-            <h1 class="text-3xl font-extrabold text-rose-600 tracking-tight">Najin Koledarček 🌸</h1>
-            <p class="text-sm text-rose-400 mt-1">Skupno sledenje menstrualnemu ciklu v realnem času</p>
+            <h1 class="text-3xl font-black text-indigo-400 tracking-tight flex items-center justify-center gap-2">
+                <span>Luna tracker</span> <span id="headerMoonIcon">🌙</span>
+            </h1>
+            <p class="text-xs text-indigo-300 mt-1 uppercase tracking-wider">Skupno sledenje ciklu v ritmu lune</p>
+            
+            <div class="mt-4 bg-slate-800/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-3 inline-block min-w-[200px]">
+                <p id="currentDateText" class="text-sm font-semibold text-slate-300">-</p>
+                <p id="moonPhaseText" class="text-xs text-indigo-200 mt-1">Računanje lunine mene...</p>
+            </div>
         </header>
 
-        <div id="predictionBox" class="bg-white p-5 rounded-2xl shadow-sm border border-rose-100 mb-6 text-center hidden">
-            <h2 class="text-xs font-bold uppercase tracking-wider text-rose-400">Predviden naslednji cikel</h2>
-            <p id="predictedDate" class="text-2xl font-black text-rose-500 mt-1">-</p>
-            <p id="daysRemaining" class="text-xs text-gray-500 mt-1"></p>
+        <div id="predictionBox" class="bg-slate-800/80 backdrop-blur-md p-5 rounded-2xl shadow-xl border border-indigo-500/30 mb-6 text-center hidden">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-indigo-400">Predviden naslednji cikel</h2>
+            <p id="predictedDate" class="text-2xl font-black text-rose-400 mt-1">-</p>
+            <p id="daysRemaining" class="text-xs text-slate-400 mt-1"></p>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 mb-6">
-            <h2 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-                <span>✍️</span> Vnesi nov začetek cikla
+        <div class="bg-slate-800/60 backdrop-blur-md p-5 rounded-2xl shadow-lg border border-slate-700/50 mb-6">
+            <h2 class="text-base font-bold text-slate-200 mb-4 flex items-center gap-2">
+                <span>✍️</span> Vnesi podatke o menstruaciji
             </h2>
             
             <div class="space-y-4">
                 <div>
-                    <label for="startDate" class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Datum začetka (prvi dan):</label>
-                    <input type="date" id="startDate" class="w-full border border-gray-200 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 focus:outline-none p-3 rounded-xl text-base bg-gray-50">
+                    <label for="startDate" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Datum začetka (prvi dan):</label>
+                    <input type="date" id="startDate" class="w-full border border-slate-600 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-900 focus:outline-none p-3 rounded-xl text-base bg-slate-700 text-white">
+                    <p class="text-[10px] text-slate-500 mt-0.5">Tukaj lahko izbereš tudi poljuben datum v preteklosti.</p>
                 </div>
 
-                <div>
-                    <label for="notes" class="block text-xs font-semibold text-gray-500 uppercase tracking-wider mb-1">Opombe / Simptomi (neobvezno):</label>
-                    <input type="text" id="notes" placeholder="Npr. blagi krči, utrujenost..." class="w-full border border-gray-200 focus:border-rose-400 focus:ring-2 focus:ring-rose-200 focus:outline-none p-3 rounded-xl text-base bg-gray-50 placeholder-gray-400">
+                <div class="grid grid-cols-2 gap-3">
+                    <div>
+                        <label for="duration" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Dni krvavitve:</label>
+                        <input type="number" id="duration" min="1" max="10" value="5" class="w-full border border-slate-600 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-900 focus:outline-none p-3 rounded-xl text-base bg-slate-700 text-white">
+                    </div>
+                    <div>
+                        <label for="notes" class="block text-xs font-semibold text-slate-400 uppercase tracking-wider mb-1">Opombe / Simptomi:</label>
+                        <input type="text" id="notes" placeholder="krči, razpoloženje..." class="w-full border border-slate-600 focus:border-indigo-400 focus:ring-2 focus:ring-indigo-900 focus:outline-none p-3 rounded-xl text-base bg-slate-700 text-white placeholder-slate-400">
+                    </div>
                 </div>
 
-                <button id="saveBtn" class="w-full bg-gradient-to-r from-rose-500 to-pink-500 text-white p-3.5 rounded-xl font-bold shadow-sm shadow-rose-200 hover:opacity-95 active:scale-[0.99] transition-all text-base cursor-pointer">
-                    Shrani v bazo
+                <button id="saveBtn" class="w-full bg-gradient-to-r from-indigo-500 to-purple-600 text-white p-3.5 rounded-xl font-bold shadow-md hover:opacity-95 active:scale-[0.99] transition-all text-base cursor-pointer">
+                    Shrani podatke
                 </button>
             </div>
         </div>
 
-        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100">
-            <h2 class="text-lg font-bold text-gray-900 mb-3 flex items-center gap-2">
-                <span>📅</span> Zgodovina ciklov
+        <div class="bg-slate-800/40 backdrop-blur-md p-5 rounded-2xl shadow-lg border border-slate-700/30">
+            <h2 class="text-base font-bold text-slate-200 mb-3 flex items-center gap-2">
+                <span>📅</span> Zgodovina vnesenih ciklov
             </h2>
-            <ul id="historyList" class="divide-y divide-gray-100 max-h-96 overflow-y-auto pr-1">
-                <li class="py-4 text-center text-gray-400 text-sm">Nalaganje podatkov...</li>
+            <ul id="historyList" class="divide-y divide-slate-700 max-h-96 overflow-y-auto pr-1">
+                <li class="py-4 text-center text-slate-500 text-sm">Nalaganje podatkov...</li>
             </ul>
         </div>
     </div>
@@ -74,74 +87,113 @@
             appId: "1:766476772242:web:0d5cc3878914ed721b174b"
         };
 
-        // Inicializacija povezave
+        // Inicializacija
         const app = initializeApp(firebaseConfig);
         const db = getDatabase(app);
         const cyclesRef = ref(db, 'cycles');
 
-        // Nastavitev današnjega datuma kot privzetega ob odpiranju aplikacije
+        // --- IZRAČUN TRENUTNEGA DATUMA IN LUNINE MENE ---
+        function updateLiveInfo() {
+            const danes = new Date();
+            
+            // Izpis datuma v slovenščini
+            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('currentDateText').textContent = `Danes je ${danes.toLocaleDateString('sl-SI', dateOptions)}`;
+
+            // Preprost astronomski izračun lunine faze (Conwayev algoritem)
+            const year = danes.getFullYear();
+            const month = danes.getMonth() + 1;
+            const day = danes.getDate();
+
+            let r = year % 100;
+            r %= 19;
+            if (r > 9) r -= 19;
+            r = ((r * 11) % 30) + month + day;
+            if (month < 3) r += 2;
+            r = month < 3 ? r + 1 : r;
+            r = (r - ((year < 2000) ? 4 : 8.3)) % 30;
+            const phaseIndex = Math.floor(r < 0 ? r + 30 : r);
+
+            // Določitev imena in simbola glede na starost lune (0-29 dni)
+            let phaseName = "";
+            let phaseIcon = "";
+
+            if (phaseIndex === 0 || phaseIndex === 29) { phaseName = "Mlaj (Nova luna)"; phaseIcon = "🌑"; }
+            else if (phaseIndex > 0 && phaseIndex < 7) { phaseName = "Rastoči srp"; phaseIcon = "🌒"; }
+            else if (phaseIndex === 7) { phaseName = "Prvi krajec"; phaseIcon = "🌓"; }
+            else if (phaseIndex > 7 && phaseIndex < 15) { phaseName = "Rastoča luna"; phaseIcon = "🌔"; }
+            else if (phaseIndex === 15) { phaseName = "Polna luna (Ščip)"; phaseIcon = "🌕"; }
+            else if (phaseIndex > 15 && phaseIndex < 22) { phaseName = "Padajoča luna"; phaseIcon = "🌖"; }
+            else if (phaseIndex === 22) { phaseName = "Zadnji krajec"; phaseIcon = "🌗"; }
+            else { phaseName = "Padajoči srp"; phaseIcon = "🌘"; }
+
+            document.getElementById('moonPhaseText').innerHTML = `Trenutna mena: <span class="font-bold text-indigo-400">${phaseIcon} ${phaseName}</span>`;
+            document.getElementById('headerMoonIcon').textContent = phaseIcon;
+        }
+
+        // Zaženemo izračun ob nalaganju strani
+        updateLiveInfo();
         document.getElementById('startDate').valueAsDate = new Date();
 
-        // Funkcija za shranjevanje ob kliku na gumb
+        // Gumb za shranjevanje
         document.getElementById('saveBtn').addEventListener('click', () => {
             const dateInput = document.getElementById('startDate').value;
+            const durationInput = parseInt(document.getElementById('duration').value) || 5;
             const notesVal = document.getElementById('notes').value.trim();
             
             if (!dateInput) {
-                alert('Prosimo, izberi datum začetka cikla.');
+                alert('Prosimo, izberi datum začetka.');
                 return;
             }
 
-            // VARNOSTNA PRETAVORBA: Prisilno formatiramo datum v čisti tekst (YYYY-MM-DD) brez nedovoljenih znakov
             const cleanDate = dateInput.split('T')[0];
 
-            // Shranjevanje v Firebase Realtime Database pod varnim avtomatskim ID-jem
             push(cyclesRef, {
                 start_date: cleanDate,
-                notes: notesVal || "Brez posebnosti",
+                duration: durationInput,
+                notes: notesVal || "Brez opomb",
                 timestamp: Date.now()
             }).then(() => {
-                // Po uspešnem shranjevanju izpraznimo vnosno polje za opombe
                 document.getElementById('notes').value = '';
-                alert('Uspešno shranjeno! Oba z možem bosta takoj videla posodobitev.');
+                alert('Podatki uspešno shranjeni!');
             }).catch((error) => {
-                alert('Napaka pri shranjevanju: ' + error.message);
+                alert('Napaka: ' + error.message);
             });
         });
 
-        // Spremljanje baze podatkov v realnem času in izris na zaslon
+        // Poslušanje sprememb v realnem času
         onValue(cyclesRef, (snapshot) => {
             const data = snapshot.val();
             const list = document.getElementById('historyList');
             list.innerHTML = '';
             
             if (data) {
-                // Pretvorba objekta v seznam in urejanje od najnovejšega datuma navzdol
                 const entries = Object.entries(data).map(([id, val]) => ({ id, ...val }));
+                // Razvrstimo strogo po datumu od najnovejšega nazaj
                 entries.sort((a, b) => b.start_date.localeCompare(a.start_date));
 
-                // Izris posameznih vnosov v zgodovino
+                // Izris vseh vnosov (tudi preteklih)
                 entries.forEach(cycle => {
                     const li = document.createElement('li');
                     li.className = 'py-3 flex justify-between items-start gap-4';
                     
-                    // Lep slovenski izpis datuma (npr. 29. junij 2026)
                     const d = new Date(cycle.start_date);
                     const formattedDate = d.toLocaleDateString('sl-SI', { day: 'numeric', month: 'long', year: 'numeric' });
+                    const krvavitevText = cycle.duration ? `(Krvavitev: ${cycle.duration} dni)` : '';
 
                     li.innerHTML = `
                         <div class="flex-1">
-                            <p class="font-bold text-gray-800 text-base">${formattedDate}</p>
-                            <p class="text-xs text-gray-500 mt-0.5">${cycle.notes}</p>
+                            <p class="font-bold text-slate-200 text-base">${formattedDate}</p>
+                            <p class="text-xs text-indigo-300 mt-0.5">${krvavitevText} <span class="text-slate-400">— ${cycle.notes}</span></p>
                         </div>
-                        <button class="delete-btn text-xs text-gray-300 hover:text-rose-500 font-medium transition-colors px-2 py-1 rounded cursor-pointer" data-id="${cycle.id}">
+                        <button class="delete-btn text-xs text-slate-500 hover:text-rose-400 font-medium transition-colors px-2 py-1 rounded cursor-pointer" data-id="${cycle.id}">
                             Briši
                         </button>
                     `;
                     list.appendChild(li);
                 });
 
-                // Poslušalci za gumbe za brisanje vnosov
+                // Brisanje
                 document.querySelectorAll('.delete-btn').forEach(btn => {
                     btn.addEventListener('click', (e) => {
                         const idToDelete = e.target.getAttribute('data-id');
@@ -151,13 +203,11 @@
                     });
                 });
 
-                // --- ALGORITEM PREDVIDEVANJA NASLEDNJEGA CIKLA ---
+                // Predvidevanje naslednjega cikla na podlagi zgodovine vnosov
                 const latestCycle = entries[0];
                 const lastDate = new Date(latestCycle.start_date);
                 
-                let cycleLengthDays = 28; // Privzeta dolžina, če imamo samo 1 vnos
-                
-                // Če imata vnesenih več ciklov, izračunamo vajino realno povprečje
+                let cycleLengthDays = 28; 
                 if (entries.length > 1) {
                     let totalDays = 0;
                     let counts = 0;
@@ -166,8 +216,6 @@
                         const d2 = new Date(entries[i+1].start_date);
                         const diffTime = Math.abs(d1 - d2);
                         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-                        
-                        // Upoštevamo le smiselne razmake med cikli (npr. med 15 in 45 dni)
                         if (diffDays > 15 && diffDays < 45) {
                             totalDays += diffDays;
                             counts++;
@@ -178,14 +226,12 @@
                     }
                 }
 
-                // Izračun datuma naslednje menstruacije
                 const nextDate = new Date(lastDate);
                 nextDate.setDate(nextDate.getDate() + cycleLengthDays);
                 
                 const formattedNextDate = nextDate.toLocaleDateString('sl-SI', { day: 'numeric', month: 'long', year: 'numeric' });
                 document.getElementById('predictedDate').textContent = formattedNextDate;
 
-                // Izračun preostalih dni
                 const today = new Date();
                 today.setHours(0,0,0,0);
                 nextDate.setHours(0,0,0,0);
@@ -194,21 +240,20 @@
 
                 const daysRemainingBox = document.getElementById('daysRemaining');
                 if (daysDiff > 0) {
-                    daysRemainingBox.textContent = `Še približno ${daysDiff} dni (izračunano na podlagi ${cycleLengthDays}-dnevnega cikla)`;
-                    daysRemainingBox.className = "text-xs text-gray-500 mt-1";
+                    daysRemainingBox.textContent = `Še približno ${daysDiff} dni (izračunano na podlagi povprečnega ${cycleLengthDays}-dnevnega cikla)`;
+                    daysRemainingBox.className = "text-xs text-slate-400 mt-1";
                 } else if (daysDiff === 0) {
                     daysRemainingBox.textContent = "Predvideno za danes!";
-                    daysRemainingBox.className = "text-xs text-rose-500 font-bold mt-1";
+                    daysRemainingBox.className = "text-xs text-indigo-400 font-bold mt-1";
                 } else {
                     daysRemainingBox.textContent = "Predviden datum je že mimo oz. cikel zamuja";
-                    daysRemainingBox.className = "text-xs text-amber-500 font-medium mt-1";
+                    daysRemainingBox.className = "text-xs text-amber-400 font-medium mt-1";
                 }
 
                 document.getElementById('predictionBox').classList.remove('hidden');
 
             } else {
-                // Če v bazi še ni podatkov
-                list.innerHTML = '<p class="text-gray-400 text-sm text-center py-4">Ni še vnesenih podatkov. Vnesita prvi cikel!</p>';
+                list.innerHTML = '<p class="text-slate-500 text-sm text-center py-4">Ni še vnesenih podatkov. Vnesita prvi cikel!</p>';
                 document.getElementById('predictionBox').classList.add('hidden');
             }
         });
