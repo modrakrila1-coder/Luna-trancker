@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luna Pregnancy Tracker 🌙🤰</title>
-    <!-- Tailwind CSS v4 za čudovit, nebeški izgled -->
+    <!-- Tailwind CSS v4 -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
 <body class="bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-slate-100 min-h-screen p-4 font-sans antialiased pb-12">
@@ -48,7 +48,7 @@
             </div>
         </div>
 
-        <!-- Kratke zabavne opomnik novice za vajin trenutni teden -->
+        <!-- Kratke zabavne opomnik novice -->
         <div class="bg-slate-800/40 backdrop-blur-md p-4 rounded-xl border border-slate-700/30 text-center">
             <p class="text-xs italic text-indigo-200">"Tako kot luna raste korak za korakom, tako raste tudi novo življenje." ✨</p>
         </div>
@@ -57,25 +57,24 @@
     <!-- Logika aplikacije -->
     <script type="module">
         // Fiksni datum zadnje menstruacije: 26. maj 2026
-        const zadnjaMenstruacija = new Date(2026, 4, 26); // Meseci v JS se začnejo z 0 (4 = maj)
+        const zadnjaMenstruacija = new Date(2026, 4, 26); // 4 = maj
 
-        // Seznam velikosti ploda po tednih (od 1. do 42. tedna)
+        // Popravljen in očiščen seznam emojijev in velikosti
         const velikostiPoTednih = {
             1: { emoji: "✨", ime: "Priprava telesa", desc: "Nosečnost se tehnično šteje od prvega dne zadnje menstruacije." },
             2: { emoji: "✨", ime: "Čas za ovulacijo", desc: "Tvoje telo se pripravlja na čudež." },
             3: { emoji: "🔬", ime: "Mikroskopsko majhna celica", desc: "Oplojeno jajčece potuje in se deli." },
-            4: { emoji: "📌", ime: "Makovo zrno", desc: "Plod se ugnezdi. Velik je okoli 1 mm." },
-            5: { emoji: "🍊", ime: "Sezamovo seme", desc: "Začenja se razvijati srček in živčni sistem." },
+            4: { emoji: "📍", ime: "Makovo zrno", desc: "Plod se ugnezdi v maternico. Velik je okoli 1 mm." },
+            5: { emoji: "🔹", ime: "Sezamovo seme", desc: "Začenja se razvijati droban srček in živčni sistem (cca 2 mm)." },
             6: { emoji: "🌾", ime: "Riževo zrno", desc: "Srček že veselo bije! Plod je velik okoli 4-5 mm." },
             7: { emoji: "🫛", ime: "Zrno graha", desc: "Razvijajo se zametki za rokice in nogice (cca 10 mm)." },
-            8: { emoji: "🍇", ime: "Malina", desc: "Plod se že malce premika, a je še neopazno (cca 1,6 cm)." },
-            9: { emoji: "🍒", ime: "Češnja", desc: "Izginja repek, obrazne poteze postajajo izrazitejše." },
-            10: { emoji: "🍓", ime: "Jagoda", desc: "Uradno ni več embrij, ampak postane fetus!" },
-            11: { emoji: "🍋", ime: "Brstični ohrovt / Limeta", desc: "Skoraj popolnoma izoblikovan, zdaj sledi predvsem rast." },
-            12: { emoji: "plum", ime: "Sliva", desc: "Razviti so že nohtki na prstkih." },
-            13: { emoji: "🍋", ime: "Limona", desc: "Zadnji teden prvega tromesečja!" },
-            14: { emoji: "🍑", ime: "Nektarina", desc: "Začetek drugega tromesečja, čas za več energije." }
-            // Opomba: Za kasnejše tedne bo aplikacija avtomatsko prilagodila opis, ko boš napredovala!
+            8: { emoji: "🫘", ime: "Fižolček", desc: "Plod je velik kot javanski fižolček, izoblikujejo se prstki (cca 1,6 cm)." },
+            9: { emoji: "🍇", ime: "Grozdna jagoda / Malina", desc: "Izginja repek, obrazne poteze postajajo izrazitejše." },
+            10: { emoji: "🍓", ime: "Jagoda", desc: "Uradno ni več embrij, ampak postane fetus (cca 3 cm)!" },
+            11: { emoji: "🫒", ime: "Oliva", desc: "Plod se že zelo aktivno premika, čeprav tega še ne čutiš." },
+            12: { emoji: "🍋", ime: "Limeta", desc: "Razviti so že nohtki na drobnih prstkih (cca 5-6 cm)." },
+            13: { emoji: "🍑", ime: "Sliva", desc: "Zadnji teden prvega tromesečja! Velikost je okoli 7-8 cm." },
+            14: { emoji: "🍋", ime: "Limona", desc: "Začetek drugega tromesečja, čas za več energije!" }
         };
 
         function posodobiTracker() {
@@ -85,7 +84,7 @@
             const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
             document.getElementById('currentDateText').textContent = `Danes je ${danes.toLocaleDateString('sl-SI', dateOptions)}`;
 
-            // 2. Izračun lunine mene (Conwayev algoritem)
+            // 2. Izračun lunine mene
             const year = danes.getFullYear();
             const month = danes.getMonth() + 1;
             const day = danes.getDate();
@@ -120,18 +119,18 @@
 
             const tedni = Math.floor(skupnoDni / 7);
             const preostaliDni = skupnoDni % 7;
-            const nosecniskiTeden = tedni + 1; // npr. 0 tednov + 5 dni pomeni, da si v 1. tednu
+            const nosecniskiTeden = tedni + 1;
 
             // Izpis tednov in dni
             document.getElementById('pregnancyProgress').textContent = `${tedni} tednov + ${preostaliDni} dni`;
             document.getElementById('totalDaysText').textContent = `Skupaj: ${skupnoDni}. dan nosečnosti (v ${nosecniskiTeden}. tednu)`;
 
-            // 4. Izračun Predvidenega Datuma Poroda (Naegelejevo pravilo: +7 dni, -3 mesece od ZM)
+            // 4. Izračun Predvidenega Datuma Poroda (+280 dni)
             const pdp = new Date(zadnjaMenstruacija);
-            pdp.setDate(pdp.getDate() + 280); // Nosečnost povprečno traja 280 dni
+            pdp.setDate(pdp.getDate() + 280);
             document.getElementById('dueDateText').textContent = pdp.toLocaleDateString('sl-SI', { day: 'numeric', month: 'long', year: 'numeric' });
 
-            // 5. Nastavitev velikosti ploda glede na teden
+            // 5. Nastavitev velikosti ploda
             const podatkiOVelikosti = velikostiPoTednih[nosecniskiTeden] || { emoji: "👶", ime: "Mali sonček raste", desc: "Vsak teden prinaša nov napredek in razvoj!" };
             
             document.getElementById('babySizeEmoji').textContent = podatkiOVelikosti.emoji;
@@ -139,7 +138,6 @@
             document.getElementById('babySizeDesc').textContent = podatkiOVelikosti.desc;
         }
 
-        // Zagon takoj ob nalaganju spletne strani
         posodobiTracker();
     </script>
 </body>
