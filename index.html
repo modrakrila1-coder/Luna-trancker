@@ -284,7 +284,7 @@
 
             // 4. Predvideni datum poroda: 280 dni po prvem dnevu zadnje menstruacije
             const pdp = new Date(zadnjaMenstruacija);
-            pdp.setDate(pdp.getDate() + 280);
+            pdp.setDate(pdp.getDate() + 279);
 
             document.getElementById("dueDateText").textContent =
                 pdp.toLocaleDateString("sl-SI", {
