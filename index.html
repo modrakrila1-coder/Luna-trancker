@@ -1,46 +1,59 @@
+```html
 <!DOCTYPE html>
 <html lang="sl">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Luna Pregnancy Tracker 🌙🤰</title>
-    <!-- Tailwind CSS v4 -->
     <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 </head>
+
 <body class="bg-gradient-to-br from-slate-950 via-indigo-950 to-slate-900 text-slate-100 min-h-screen p-4 font-sans antialiased pb-12">
 
     <div class="max-w-md mx-auto">
+
         <!-- Glava aplikacije -->
         <header class="text-center my-6">
             <h1 class="text-3xl font-black text-indigo-300 tracking-tight flex items-center justify-center gap-2">
-                <span>Luna Tracker</span> <span id="headerMoonIcon">🌙</span>
+                <span>Luna Tracker</span>
+                <span id="headerMoonIcon">🌙</span>
             </h1>
-            <p class="text-xs text-indigo-200 mt-1 uppercase tracking-wider">Najino potovanje v ritmu lune 🤰</p>
-            
-            <!-- Danes in Lunina mena -->
+
+            <p class="text-xs text-indigo-200 mt-1 uppercase tracking-wider">
+                Najino potovanje v ritmu lune 🤰
+            </p>
+
             <div class="mt-4 bg-slate-850/50 backdrop-blur-sm border border-slate-700/50 rounded-xl p-3 inline-block min-w-[220px]">
                 <p id="currentDateText" class="text-sm font-semibold text-slate-300">-</p>
-                <p id="moonPhaseText" class="text-xs text-indigo-300 mt-1">Računanje lunine mene...</p>
+                <p id="moonPhaseText" class="text-xs text-indigo-300 mt-1">
+                    Računanje lunine mene...
+                </p>
             </div>
         </header>
 
         <!-- Glavni prikaz nosečnosti -->
         <div class="bg-slate-800/80 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-indigo-500/30 mb-6 text-center">
-            <h2 class="text-xs font-bold uppercase tracking-wider text-indigo-400">Trenutno stanje nosečnosti</h2>
-            
-            <!-- Veliki prikaz tednov in dni -->
+            <h2 class="text-xs font-bold uppercase tracking-wider text-indigo-400">
+                Trenutno stanje nosečnosti
+            </h2>
+
             <p id="pregnancyProgress" class="text-3xl font-black text-rose-400 mt-2">-</p>
             <p id="totalDaysText" class="text-xs text-slate-400 mt-1">-</p>
-            
+
             <div class="mt-4 pt-4 border-t border-slate-700/50">
-                <p class="text-xs text-slate-400">Predviden datum poroda (PDP):</p>
+                <p class="text-xs text-slate-400">
+                    Predviden datum poroda (PDP):
+                </p>
                 <p id="dueDateText" class="text-base font-bold text-indigo-300 mt-0.5">-</p>
             </div>
         </div>
 
         <!-- Velikost ploda -->
         <div class="bg-slate-800/60 backdrop-blur-md p-5 rounded-2xl shadow-lg border border-slate-700/50 mb-6 text-center">
-            <h2 class="text-xs font-bold uppercase tracking-wider text-purple-400 mb-2">Velikost najinega ploda</h2>
+            <h2 class="text-xs font-bold uppercase tracking-wider text-purple-400 mb-2">
+                Velikost najinega ploda
+            </h2>
+
             <div class="flex flex-col items-center justify-center py-2">
                 <span id="babySizeEmoji" class="text-5xl my-2">🌱</span>
                 <p id="babySizeText" class="text-lg font-bold text-slate-200 mt-1">-</p>
@@ -48,97 +61,263 @@
             </div>
         </div>
 
-        <!-- Kratke zabavne opomnik novice -->
+        <!-- Motivacijski napis -->
         <div class="bg-slate-800/40 backdrop-blur-md p-4 rounded-xl border border-slate-700/30 text-center">
-            <p class="text-xs italic text-indigo-200">"Tako kot luna raste korak za korakom, tako raste tudi novo življenje." ✨</p>
+            <p class="text-xs italic text-indigo-200">
+                "Tako kot luna raste korak za korakom, tako raste tudi novo življenje." ✨
+            </p>
         </div>
+
     </div>
 
     <!-- Logika aplikacije -->
     <script type="module">
-        // Fiksni datum zadnje menstruacije: 4. september 2026
-        const zadnjaMenstruacija = new Date(2026, 8, 4); // 8 = september (meseci se štejejo od 0 do 11)
 
-        // Popravljen in očiščen seznam emojijev in velikosti
+        // Prvi dan nosečnosti: 4. september 2026
+        // Meseci se v JavaScriptu štejejo od 0 do 11.
+        const zadnjaMenstruacija = new Date(2026, 8, 4);
+
+        // Velikost ploda glede na nosečnostni teden
         const velikostiPoTednih = {
-            1: { emoji: "✨", ime: "Priprava telesa", desc: "Nosečnost se tehnično šteje od prvega dne zadnje menstruacije." },
-            2: { emoji: "✨", ime: "Čas za ovulacijo", desc: "Tvoje telo se pripravlja na čudež." },
-            3: { emoji: "🔬", ime: "Mikroskopsko majhna celica", desc: "Oplojeno jajčece potuje in se deli." },
-            4: { emoji: "📍", ime: "Makovo zrno", desc: "Plod se ugnezdi v maternico. Velik je okoli 1 mm." },
-            5: { emoji: "🔹", ime: "Sezamovo seme", desc: "Začenja se razvijati droban srček in živčni sistem (cca 2 mm)." },
-            6: { emoji: "🌾", ime: "Riževo zrno", desc: "Srček že veselo bije! Plod je velik okoli 4-5 mm." },
-            7: { emoji: "🫛", ime: "Zrno graha", desc: "Razvijajo se zametki za rokice in nogice (cca 10 mm)." },
-            8: { emoji: "🫘", ime: "Fižolček", desc: "Plod je velik kot javanski fižolček, izoblikujejo se prstki (cca 1,6 cm)." },
-            9: { emoji: "🍇", ime: "Grozdna jagoda / Malina", desc: "Izginja repek, obrazne poteze postajajo izrazitejše." },
-            10: { emoji: "🍓", ime: "Jagoda", desc: "Uradno ni več embrij, ampak postane fetus (cca 3 cm)!" },
-            11: { emoji: "🫒", ime: "Oliva", desc: "Plod se že zelo aktivno premika, čeprav tega še ne čutiš." },
-            12: { emoji: "🍋", ime: "Limeta", desc: "Razviti so že nohtki na drobnih prstkih (cca 5-6 cm)." },
-            13: { emoji: "🍑", ime: "Sliva", desc: "Zadnji teden prvega tromesečja! Velikost je okoli 7-8 cm." },
-            14: { emoji: "🍋", ime: "Limona", desc: "Začetek drugega tromesečja, čas za več energije!" }
+            1: {
+                emoji: "✨",
+                ime: "Priprava telesa",
+                desc: "Nosečnost se običajno šteje od prvega dne zadnje menstruacije."
+            },
+            2: {
+                emoji: "✨",
+                ime: "Čas za ovulacijo",
+                desc: "Tvoje telo se pripravlja na čudež."
+            },
+            3: {
+                emoji: "🔬",
+                ime: "Mikroskopsko majhna celica",
+                desc: "Oplojeno jajčece potuje in se deli."
+            },
+            4: {
+                emoji: "📍",
+                ime: "Makovo zrno",
+                desc: "Plod se ugnezdi v maternico. Velik je okoli 1 mm."
+            },
+            5: {
+                emoji: "🔹",
+                ime: "Sezamovo seme",
+                desc: "Začenja se razvijati droban srček in živčni sistem."
+            },
+            6: {
+                emoji: "🌾",
+                ime: "Riževo zrno",
+                desc: "Razvijajo se zgodnje strukture srca."
+            },
+            7: {
+                emoji: "🫛",
+                ime: "Zrno graha",
+                desc: "Razvijajo se zametki za rokice in nogice."
+            },
+            8: {
+                emoji: "🫘",
+                ime: "Fižolček",
+                desc: "Plod hitro raste in se razvija."
+            },
+            9: {
+                emoji: "🍇",
+                ime: "Grozdna jagoda / Malina",
+                desc: "Obrazne poteze postajajo izrazitejše."
+            },
+            10: {
+                emoji: "🍓",
+                ime: "Jagoda",
+                desc: "Nadaljuje se razvoj pomembnih organov."
+            },
+            11: {
+                emoji: "🫒",
+                ime: "Oliva",
+                desc: "Plod se že premika, čeprav tega še ne čutiš."
+            },
+            12: {
+                emoji: "🍋",
+                ime: "Limeta",
+                desc: "Razvijajo se drobni prstki in nohtki."
+            },
+            13: {
+                emoji: "🍑",
+                ime: "Sliva",
+                desc: "Prvo tromesečje se približuje koncu."
+            },
+            14: {
+                emoji: "🍋",
+                ime: "Limona",
+                desc: "Začetek drugega tromesečja."
+            }
         };
 
+        // Pretvori datum v polnoč lokalnega časa,
+        // da se izognemo napakam zaradi ur in poletnega časa.
+        function datumBrezUre(datum) {
+            return new Date(
+                datum.getFullYear(),
+                datum.getMonth(),
+                datum.getDate()
+            );
+        }
+
         function posodobiTracker() {
-            const danes = new Date();
-            
-            // 1. Izpis današnjega datuma
-            const dateOptions = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
-            document.getElementById('currentDateText').textContent = `Danes je ${danes.toLocaleDateString('sl-SI', dateOptions)}`;
+            const danes = datumBrezUre(new Date());
+
+            // 1. Današnji datum
+            const dateOptions = {
+                weekday: "long",
+                year: "numeric",
+                month: "long",
+                day: "numeric"
+            };
+
+            document.getElementById("currentDateText").textContent =
+                `Danes je ${danes.toLocaleDateString("sl-SI", dateOptions)}`;
 
             // 2. Izračun lunine mene
             const year = danes.getFullYear();
             const month = danes.getMonth() + 1;
             const day = danes.getDate();
-            let r = year % 100; r %= 19; if (r > 9) r -= 19;
+
+            let r = year % 100;
+            r %= 19;
+
+            if (r > 9) r -= 19;
+
             r = ((r * 11) % 30) + month + day;
+
             if (month < 3) r += 2;
+
             r = month < 3 ? r + 1 : r;
-            r = (r - ((year < 2000) ? 4 : 8.3)) % 30;
+            r = (r - (year < 2000 ? 4 : 8.3)) % 30;
+
             const phaseIndex = Math.floor(r < 0 ? r + 30 : r);
 
-            let phaseName = "", phaseIcon = "";
-            if (phaseIndex === 0 || phaseIndex === 29) { phaseName = "Mlaj (Nova luna)"; phaseIcon = "🌑"; }
-            else if (phaseIndex > 0 && phaseIndex < 7) { phaseName = "Rastoči srp"; phaseIcon = "🌒"; }
-            else if (phaseIndex === 7) { phaseName = "Prvi krajec"; phaseIcon = "🌓"; }
-            else if (phaseIndex > 7 && phaseIndex < 15) { phaseName = "Rastoča luna"; phaseIcon = "🌔"; }
-            else if (phaseIndex === 15) { phaseName = "Polna luna (Ščip)"; phaseIcon = "🌕"; }
-            else if (phaseIndex > 15 && phaseIndex < 22) { phaseName = "Padajoča luna"; phaseIcon = "🌖"; }
-            else if (phaseIndex === 22) { phaseName = "Zadnji krajec"; phaseIcon = "🌗"; }
-            else { phaseName = "Padajoči srp"; phaseIcon = "🌘"; }
+            let phaseName = "";
+            let phaseIcon = "";
 
-            document.getElementById('moonPhaseText').innerHTML = `Trenutna mena: <span class="font-bold text-indigo-400">${phaseIcon} ${phaseName}</span>`;
-            document.getElementById('headerMoonIcon').textContent = phaseIcon;
+            if (phaseIndex === 0 || phaseIndex === 29) {
+                phaseName = "Mlaj (Nova luna)";
+                phaseIcon = "🌑";
+            } else if (phaseIndex > 0 && phaseIndex < 7) {
+                phaseName = "Rastoči srp";
+                phaseIcon = "🌒";
+            } else if (phaseIndex === 7) {
+                phaseName = "Prvi krajec";
+                phaseIcon = "🌓";
+            } else if (phaseIndex > 7 && phaseIndex < 15) {
+                phaseName = "Rastoča luna";
+                phaseIcon = "🌔";
+            } else if (phaseIndex === 15) {
+                phaseName = "Polna luna (Ščip)";
+                phaseIcon = "🌕";
+            } else if (phaseIndex > 15 && phaseIndex < 22) {
+                phaseName = "Padajoča luna";
+                phaseIcon = "🌖";
+            } else if (phaseIndex === 22) {
+                phaseName = "Zadnji krajec";
+                phaseIcon = "🌗";
+            } else {
+                phaseName = "Padajoči srp";
+                phaseIcon = "🌘";
+            }
+
+            document.getElementById("moonPhaseText").innerHTML =
+                `Trenutna mena: <span class="font-bold text-indigo-400">${phaseIcon} ${phaseName}</span>`;
+
+            document.getElementById("headerMoonIcon").textContent = phaseIcon;
 
             // 3. Izračun nosečnosti
-            const razlikaVCasu = danes - zadnjaMenstruacija;
-            const skupnoDni = Math.floor(razlikaVCasu / (1000 * 60 * 60 * 24));
+            const prviDan = datumBrezUre(zadnjaMenstruacija);
 
-            if (skupnoDni < 0) {
-                document.getElementById('pregnancyProgress').textContent = "Potovanje se še ni začelo";
+            // Razlika med datumoma v celih koledarskih dneh
+            const razlikaVCasu = danes.getTime() - prviDan.getTime();
+
+            const dneviOdZacetka = Math.round(
+                razlikaVCasu / (1000 * 60 * 60 * 24)
+            );
+
+            if (dneviOdZacetka < 0) {
+                document.getElementById("pregnancyProgress").textContent =
+                    "Potovanje se še ni začelo";
+
+                document.getElementById("totalDaysText").textContent =
+                    "Prvi dan nosečnosti bo 4. septembra 2026.";
+
+                document.getElementById("babySizeEmoji").textContent = "🌱";
+                document.getElementById("babySizeText").textContent =
+                    "Najino potovanje se bliža";
+                document.getElementById("babySizeDesc").textContent =
+                    "Kmalu se začne novo poglavje.";
+
+                const pdp = new Date(zadnjaMenstruacija);
+                pdp.setDate(pdp.getDate() + 280);
+
+                document.getElementById("dueDateText").textContent =
+                    pdp.toLocaleDateString("sl-SI", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric"
+                    });
+
                 return;
             }
 
-            const tedni = Math.floor(skupnoDni / 7);
-            const preostaliDni = skupnoDni % 7;
+            // KLJUČNI POPRAVEK:
+            // 4. september = 1. dan, ne 0. dan.
+            const skupnoDni = dneviOdZacetka + 1;
+
+            // Število zaključenih tednov in dan znotraj tedna
+            const tedni = Math.floor((skupnoDni - 1) / 7);
+            const preostaliDni = ((skupnoDni - 1) % 7) + 1;
+
+            // Nosečnostni teden: 1–7. dan = 1. teden
             const nosecniskiTeden = tedni + 1;
 
             // Izpis tednov in dni
-            document.getElementById('pregnancyProgress').textContent = `${tedni} tednov + ${preostaliDni} dni`;
-            document.getElementById('totalDaysText').textContent = `Skupaj: ${skupnoDni}. dan nosečnosti (v ${nosecniskiTeden}. tednu)`;
+            document.getElementById("pregnancyProgress").textContent =
+                `${tedni} tednov + ${preostaliDni} dni`;
 
-            // 4. Izračun Predvidenega Datuma Poroda (+280 dni)
+            document.getElementById("totalDaysText").textContent =
+                `Skupaj: ${skupnoDni}. dan nosečnosti (v ${nosecniskiTeden}. tednu)`;
+
+            // 4. Predvideni datum poroda: 280 dni po prvem dnevu zadnje menstruacije
             const pdp = new Date(zadnjaMenstruacija);
             pdp.setDate(pdp.getDate() + 280);
-            document.getElementById('dueDateText').textContent = pdp.toLocaleDateString('sl-SI', { day: 'numeric', month: 'long', year: 'numeric' });
 
-            // 5. Nastavitev velikosti ploda
-            const podatkiOVelikosti = velikostiPoTednih[nosecniskiTeden] || { emoji: "👶", ime: "Mali sonček raste", desc: "Vsak teden prinaša nov napredek in razvoj!" };
-            
-            document.getElementById('babySizeEmoji').textContent = podatkiOVelikosti.emoji;
-            document.getElementById('babySizeText').textContent = podatkiOVelikosti.ime;
-            document.getElementById('babySizeDesc').textContent = podatkiOVelikosti.desc;
+            document.getElementById("dueDateText").textContent =
+                pdp.toLocaleDateString("sl-SI", {
+                    day: "numeric",
+                    month: "long",
+                    year: "numeric"
+                });
+
+            // 5. Velikost ploda glede na nosečnostni teden
+            const podatkiOVelikosti =
+                velikostiPoTednih[nosecniskiTeden] || {
+                    emoji: "👶",
+                    ime: "Mali sonček raste",
+                    desc: "Vsak teden prinaša nov napredek in razvoj!"
+                };
+
+            document.getElementById("babySizeEmoji").textContent =
+                podatkiOVelikosti.emoji;
+
+            document.getElementById("babySizeText").textContent =
+                podatkiOVelikosti.ime;
+
+            document.getElementById("babySizeDesc").textContent =
+                podatkiOVelikosti.desc;
         }
 
+        // Posodobitev ob odprtju strani
         posodobiTracker();
+
+        // Samodejna osvežitev vsakih 60 sekund
+        setInterval(posodobiTracker, 60000);
+
     </script>
 </body>
 </html>
+```
