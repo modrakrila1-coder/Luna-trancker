@@ -267,16 +267,14 @@
             // 4. september = 1. dan, ne 0. dan.
             const skupnoDni = dneviOdZacetka + 1;
 
-            // Število zaključenih tednov in dan znotraj tedna
-            const tedni = Math.floor((skupnoDni - 1) / 7);
-            const preostaliDni = ((skupnoDni - 1) % 7) + 1;
 
-            // Nosečnostni teden: 1–7. dan = 1. teden
-            const nosecniskiTeden = tedni + 1;
+            // Izračun trenutnega nosečnostnega tedna
+            const nosecniskiTeden = Math.ceil(skupnoDni / 7);
 
-            // Izpis tednov in dni
+            // Prikaz samo števila tednov
             document.getElementById("pregnancyProgress").textContent =
-                `${tedni} tednov + ${preostaliDni} dni`;
+                `${nosecniskiTeden} ${nosecniskiTeden === 1 ? "teden" : "tednov"}`;
+
 
             document.getElementById("totalDaysText").textContent =
                 `Skupaj: ${skupnoDni}. dan nosečnosti (v ${nosecniskiTeden}. tednu)`;
