@@ -290,9 +290,11 @@
                     year: "numeric"
                 });
 
-            // 5. Velikost ploda glede na nosečnostni teden
+            // 5. Velikost ploda je en teden pred prikazanim številom
+            const tedenZaVelikost = nosecniskiTeden + 1;
+
             const podatkiOVelikosti =
-                velikostiPoTednih[nosecniskiTeden] || {
+                velikostiPoTednih[tedenZaVelikost] || {
                     emoji: "👶",
                     ime: "Mali sonček raste",
                     desc: "Vsak teden prinaša nov napredek in razvoj!"
