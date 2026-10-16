@@ -73,85 +73,26 @@
     <script type="module">
 
         // Prvi dan nosečnosti: 4. september 2026
-        // Meseci se v JavaScriptu štejejo od 0 do 11.
         const zadnjaMenstruacija = new Date(2026, 8, 4);
 
         // Velikost ploda glede na nosečnostni teden
         const velikostiPoTednih = {
-            1: {
-                emoji: "✨",
-                ime: "Priprava telesa",
-                desc: "Nosečnost se običajno šteje od prvega dne zadnje menstruacije."
-            },
-            2: {
-                emoji: "✨",
-                ime: "Čas za ovulacijo",
-                desc: "Tvoje telo se pripravlja na čudež."
-            },
-            3: {
-                emoji: "🔬",
-                ime: "Mikroskopsko majhna celica",
-                desc: "Oplojeno jajčece potuje in se deli."
-            },
-            4: {
-                emoji: "📍",
-                ime: "Makovo zrno",
-                desc: "Plod se ugnezdi v maternico. Velik je okoli 1 mm."
-            },
-            5: {
-                emoji: "🔹",
-                ime: "Sezamovo seme",
-                desc: "Začenja se razvijati droban srček in živčni sistem."
-            },
-            6: {
-                emoji: "🌾",
-                ime: "Riževo zrno",
-                desc: "Razvijajo se zgodnje strukture srca."
-            },
-            7: {
-                emoji: "🫛",
-                ime: "Zrno graha",
-                desc: "Razvijajo se zametki za rokice in nogice."
-            },
-            8: {
-                emoji: "🫘",
-                ime: "Fižolček",
-                desc: "Plod hitro raste in se razvija."
-            },
-            9: {
-                emoji: "🍇",
-                ime: "Grozdna jagoda / Malina",
-                desc: "Obrazne poteze postajajo izrazitejše."
-            },
-            10: {
-                emoji: "🍓",
-                ime: "Jagoda",
-                desc: "Nadaljuje se razvoj pomembnih organov."
-            },
-            11: {
-                emoji: "🫒",
-                ime: "Oliva",
-                desc: "Plod se že premika, čeprav tega še ne čutiš."
-            },
-            12: {
-                emoji: "🍋",
-                ime: "Limeta",
-                desc: "Razvijajo se drobni prstki in nohtki."
-            },
-            13: {
-                emoji: "🍑",
-                ime: "Sliva",
-                desc: "Prvo tromesečje se približuje koncu."
-            },
-            14: {
-                emoji: "🍋",
-                ime: "Limona",
-                desc: "Začetek drugega tromesečja."
-            }
+            1: { emoji: "✨", ime: "Priprava telesa", desc: "Nosečnost se običajno šteje od prvega dne zadnje menstruacije." },
+            2: { emoji: "✨", ime: "Čas za ovulacijo", desc: "Tvoje telo se pripravlja na čudež." },
+            3: { emoji: "🔬", ime: "Mikroskopsko majhna celica", desc: "Oplojeno jajčece potuje in se deli." },
+            4: { emoji: "📍", ime: "Makovo zrno", desc: "Plod se ugnezdi v maternico. Velik je okoli 1 mm." },
+            5: { emoji: "🔹", ime: "Sezamovo seme", desc: "Začenja se razvijati droban srček in živčni sistem." },
+            6: { emoji: "🌾", ime: "Riževo zrno", desc: "Razvijajo se zgodnje strukture srca." },
+            7: { emoji: "🫛", ime: "Zrno graha", desc: "Razvijajo se zametki za rokice in nogice." },
+            8: { emoji: "🫘", ime: "Fižolček", desc: "Plod hitro raste in se razvija." },
+            9: { emoji: "🍇", ime: "Grozdna jagoda / Malina", desc: "Obrazne poteze postajajo izrazitejše." },
+            10: { emoji: "🍓", ime: "Jagoda", desc: "Nadaljuje se razvoj pomembnih organov." },
+            11: { emoji: "🫒", ime: "Oliva", desc: "Plod se že premika, čeprav tega še ne čutiš." },
+            12: { emoji: "🍋", ime: "Limeta", desc: "Razvijajo se drobni prstki in nohtki." },
+            13: { emoji: "🍑", ime: "Sliva", desc: "Prvo tromesečje se približuje koncu." },
+            14: { emoji: "🍋", ime: "Limona", desc: "Začetek drugega tromesečja." }
         };
 
-        // Pretvori datum v polnoč lokalnega časa,
-        // da se izognemo napakam zaradi ur in poletnega časa.
         function datumBrezUre(datum) {
             return new Date(
                 datum.getFullYear(),
@@ -181,13 +122,9 @@
 
             let r = year % 100;
             r %= 19;
-
             if (r > 9) r -= 19;
-
             r = ((r * 11) % 30) + month + day;
-
             if (month < 3) r += 2;
-
             r = month < 3 ? r + 1 : r;
             r = (r - (year < 2000 ? 4 : 8.3)) % 30;
 
@@ -229,51 +166,36 @@
 
             // 3. Izračun nosečnosti
             const prviDan = datumBrezUre(zadnjaMenstruacija);
-
-            // Razlika med datumoma v celih koledarskih dneh
             const razlikaVCasu = danes.getTime() - prviDan.getTime();
-
-            const dneviOdZacetka = Math.round(
-                razlikaVCasu / (1000 * 60 * 60 * 24)
-            );
+            const dneviOdZacetka = Math.round(razlikaVCasu / (1000 * 60 * 60 * 24));
 
             if (dneviOdZacetka < 0) {
-                document.getElementById("pregnancyProgress").textContent =
-                    "Potovanje se še ni začelo";
-
-                document.getElementById("totalDaysText").textContent =
-                    "Prvi dan nosečnosti bo 4. septembra 2026.";
-
+                document.getElementById("pregnancyProgress").textContent = "Potovanje se še ni začelo";
+                document.getElementById("totalDaysText").textContent = "Prvi dan nosečnosti bo 4. septembra 2026.";
                 document.getElementById("babySizeEmoji").textContent = "🌱";
-                document.getElementById("babySizeText").textContent =
-                    "Najino potovanje se bliža";
-                document.getElementById("babySizeDesc").textContent =
-                    "Kmalu se začne novo poglavje.";
+                document.getElementById("babySizeText").textContent = "Najino potovanje se bliža";
+                document.getElementById("babySizeDesc").textContent = "Kmalu se začne novo poglavje.";
 
                 const pdp = new Date(zadnjaMenstruacija);
                 pdp.setDate(pdp.getDate() + 280);
-
                 document.getElementById("dueDateText").textContent =
-                    pdp.toLocaleDateString("sl-SI", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric"
-                    });
-
+                    pdp.toLocaleDateString("sl-SI", { day: "numeric", month: "long", year: "numeric" });
                 return;
             }
 
-            // Skupno dni (4. september = 1. dan)
+            // Ker je 4. september 1. dan:
             const skupnoDni = dneviOdZacetka + 1;
 
-            // Izračun tednov in preostalih dni
+            // Pravilen izračun pretečenih tednov in preostalih dni
             const tedni = Math.floor((skupnoDni - 1) / 7);
             const dnevi = (skupnoDni - 1) % 7;
 
-            // Prikaz v formatu "X tednov + Y dni"
-            let tedenBeseda = tedni === 1 ? "teden" : "tednov";
+            // Sklonitev
+            let tedenBeseda = tedni === 1 ? "teden" : (tedni === 2 ? "tedna" : (tedni % 10 === 3 || tedni % 10 === 4 ? "tedne" : "tednov"));
+            if (tedni >= 5 && tedni <= 20) tedenBeseda = "tednov"; // za slovensko pravopisno pravilo
+
             let danBeseda = dnevi === 1 ? "dan" : (dnevi === 2 ? "dneva" : "dni");
-            
+
             let progressText = `${tedni} ${tedenBeseda}`;
             if (dnevi > 0) {
                 progressText += ` + ${dnevi} ${danBeseda}`;
@@ -281,13 +203,13 @@
 
             document.getElementById("pregnancyProgress").textContent = progressText;
 
-            // Trenutni teden za računanje velikosti (npr. če je 6 tednov + 1 dan, smo v 7. tednu)
-            const nosecniskiTeden = tedni + 1;
+            // Tekoči teden (npr. 6 tednov + 1 dan pomeni, da teče 7. teden)
+            const tekočiTeden = tedni + 1;
 
             document.getElementById("totalDaysText").textContent =
-                `Skupaj: ${skupnoDni}. dan nosečnosti (v ${nosecniskiTeden}. tednu)`;
+                `Skupaj: ${skupnoDni}. dan nosečnosti (v ${tekočiTeden}. tednu)`;
 
-            // 4. Predvideni datum poroda: 280 dni po prvem dnevu zadnje menstruacije
+            // 4. Predvideni datum poroda (280 dni od začetka)
             const pdp = new Date(zadnjaMenstruacija);
             pdp.setDate(pdp.getDate() + 279);
 
@@ -299,29 +221,19 @@
                 });
 
             // 5. Velikost ploda glede na tekoči teden
-            const tedenZaVelikost = nosecniskiTeden;
-
             const podatkiOVelikosti =
-                velikostiPoTednih[tedenZaVelikost] || {
+                velikostiPoTednih[tekočiTeden] || {
                     emoji: "👶",
                     ime: "Mali sonček raste",
                     desc: "Vsak teden prinaša nov napredek in razvoj!"
                 };
 
-            document.getElementById("babySizeEmoji").textContent =
-                podatkiOVelikosti.emoji;
-
-            document.getElementById("babySizeText").textContent =
-                podatkiOVelikosti.ime;
-
-            document.getElementById("babySizeDesc").textContent =
-                podatkiOVelikosti.desc;
+            document.getElementById("babySizeEmoji").textContent = podatkiOVelikosti.emoji;
+            document.getElementById("babySizeText").textContent = podatkiOVelikosti.ime;
+            document.getElementById("babySizeDesc").textContent = podatkiOVelikosti.desc;
         }
 
-        // Posodobitev ob odprtju strani
         posodobiTracker();
-
-        // Samodejna osvežitev vsakih 60 sekund
         setInterval(posodobiTracker, 60000);
 
     </script>
