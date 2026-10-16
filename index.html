@@ -30,16 +30,18 @@
             </div>
         </header>
 
-        <!-- Glavni prikaz nosečnosti -->
-        <div class="bg-slate-800/80 backdrop-blur-md p-6 rounded-2xl shadow-xl border border-indigo-500/30 mb-6 text-center">
-            <h2 class="text-xs font-bold uppercase tracking-wider text-indigo-400">
+        <!-- Glavni prikaz nosečnosti (zmanjšani razmaki med vrsticami: space-y-2) -->
+        <div class="bg-slate-800/80 backdrop-blur-md p-5 rounded-2xl shadow-xl border border-indigo-500/30 mb-6 text-center">
+            <h2 class="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-1">
                 Trenutno stanje nosečnosti
             </h2>
 
-            <p id="pregnancyProgress" class="text-3xl font-black text-rose-400 mt-2">-</p>
-            <p id="totalDaysText" class="text-xs text-slate-400 mt-1">-</p>
+            <div class="space-y-1.5">
+                <p id="pregnancyProgress" class="text-3xl font-black text-rose-400">-</p>
+                <p id="totalDaysText" class="text-xs text-slate-400">-</p>
+            </div>
 
-            <div class="mt-4 pt-4 border-t border-slate-700/50">
+            <div class="mt-3 pt-3 border-t border-slate-700/50">
                 <p class="text-xs text-slate-400">
                     Predviden datum poroda (PDP):
                 </p>
@@ -53,8 +55,8 @@
                 Velikost najinega ploda
             </h2>
 
-            <div class="flex flex-col items-center justify-center py-2">
-                <span id="babySizeEmoji" class="text-5xl my-2">🌱</span>
+            <div class="flex flex-col items-center justify-center py-1">
+                <span id="babySizeEmoji" class="text-5xl my-1">🌱</span>
                 <p id="babySizeText" class="text-lg font-bold text-slate-200 mt-1">-</p>
                 <p id="babySizeDesc" class="text-xs text-slate-400 mt-1 px-4">-</p>
             </div>
@@ -166,8 +168,10 @@
 
             // 3. Izračun nosečnosti
             const prviDan = datumBrezUre(zadnjaMenstruacija);
-            const razlikaVCasu = danes.getTime() - prviDan.getTime();
-            const dneviOdZacetka = Math.round(razlikaVCasu / (1000 * 60 * 60 * 24));
+            
+            // Izračun z natančnim deljenjem milisekund (brez napak ur/časovnih pasov)
+            const msNaDan = 1000 * 60 * 60 * 24;
+            const dneviOdZacetka = Math.floor((danes.getTime() - prviDan.getTime()) / msNaDan);
 
             if (dneviOdZacetka < 0) {
                 document.getElementById("pregnancyProgress").textContent = "Potovanje se še ni začelo";
@@ -183,21 +187,26 @@
                 return;
             }
 
-            // Ker je 4. september 1. dan:
+            // Ker je 4. september 1. dan (dneviOdZacetka za 4. sep je 0, skupnoDni je 1)
             const skupnoDni = dneviOdZacetka + 1;
 
-            // Pravilen izračun pretečenih tednov in preostalih dni
+            // Izračun tednov in dni (npr. 43 dni -> 6 tednov + 1 dan)
             const tedni = Math.floor((skupnoDni - 1) / 7);
             const dnevi = (skupnoDni - 1) % 7;
 
-            // Sklonitev
-            let tedenBeseda = tedni === 1 ? "teden" : (tedni === 2 ? "tedna" : (tedni % 10 === 3 || tedni % 10 === 4 ? "tedne" : "tednov"));
-            if (tedni >= 5 && tedni <= 20) tedenBeseda = "tednov"; // za slovensko pravopisno pravilo
-
-            let danBeseda = dnevi === 1 ? "dan" : (dnevi === 2 ? "dneva" : "dni");
+            // Oblikovanje izpisa tednov
+            let tedenBeseda = "tednov";
+            if (tedni === 1) tedenBeseda = "teden";
+            else if (tedni === 2) tedenBeseda = "tedna";
+            else if (tedni === 3 || tedni === 4) tedenBeseda = "tedne";
 
             let progressText = `${tedni} ${tedenBeseda}`;
             if (dnevi > 0) {
+                let danBeseda = "dni";
+                if (dnevi === 1) danBeseda = "dan";
+                else if (dnevi === 2) danBeseda = "dneva";
+                else if (dnevi === 3 || dnevi === 4) danBeseda = "dni";
+                
                 progressText += ` + ${dnevi} ${danBeseda}`;
             }
 
