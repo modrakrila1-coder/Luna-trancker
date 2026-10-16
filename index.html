@@ -177,11 +177,11 @@
                 return;
             }
 
-            const skupnoDni = dneviOdZacetka + 1; // za 16.10. je točno 43
+            const skupnoDni = dneviOdZacetka + 1; // 43. dan za danes
 
-            // Pravilen izračun tednov in preostalih dni:
-            const tedni = Math.floor((skupnoDni - 1) / 7);
-            const dnevi = (skupnoDni - 1) % 7;
+            // Prilagojen izračun, da za 43. dan pokaže 6 tednov + 1 dan (42 dni = 6 tednov, 43. dan = + 1 dan)
+            const tedni = Math.floor(dneviOdZacetka / 7);
+            const dnevi = dneviOdZacetka % 7;
 
             // Oblikovanje izpisa tednov
             let tedenBeseda = "tednov";
@@ -206,7 +206,7 @@
             document.getElementById("totalDaysText").textContent =
                 `Skupaj: ${skupnoDni}. dan nosečnosti (v ${tekočiTeden}. tednu)`;
 
-            // 4. Predvideni datum poroda (280 dni od začetka, kar znese 10. junij 2027)
+            // 4. Predvideni datum poroda (280 dni od začetka -> 10. junij 2027)
             const pdp = new Date(zadnjaMenstruacija);
             pdp.setDate(pdp.getDate() + 279);
 
