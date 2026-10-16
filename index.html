@@ -263,18 +263,26 @@
                 return;
             }
 
-            // KLJUČNI POPRAVEK:
-            // 4. september = 1. dan, ne 0. dan.
+            // Skupno dni (4. september = 1. dan)
             const skupnoDni = dneviOdZacetka + 1;
 
+            // Izračun tednov in preostalih dni
+            const tedni = Math.floor((skupnoDni - 1) / 7);
+            const dnevi = (skupnoDni - 1) % 7;
 
-            // Izračun trenutnega nosečnostnega tedna
-            const nosecniskiTeden = Math.ceil(skupnoDni / 7);
+            // Prikaz v formatu "X tednov + Y dni"
+            let tedenBeseda = tedni === 1 ? "teden" : "tednov";
+            let danBeseda = dnevi === 1 ? "dan" : (dnevi === 2 ? "dneva" : "dni");
+            
+            let progressText = `${tedni} ${tedenBeseda}`;
+            if (dnevi > 0) {
+                progressText += ` + ${dnevi} ${danBeseda}`;
+            }
 
-            // Prikaz samo števila tednov
-            document.getElementById("pregnancyProgress").textContent =
-                `${nosecniskiTeden} ${nosecniskiTeden === 1 ? "teden" : "tednov"}`;
+            document.getElementById("pregnancyProgress").textContent = progressText;
 
+            // Trenutni teden za računanje velikosti (npr. če je 6 tednov + 1 dan, smo v 7. tednu)
+            const nosecniskiTeden = tedni + 1;
 
             document.getElementById("totalDaysText").textContent =
                 `Skupaj: ${skupnoDni}. dan nosečnosti (v ${nosecniskiTeden}. tednu)`;
@@ -290,8 +298,8 @@
                     year: "numeric"
                 });
 
-            // 5. Velikost ploda je en teden pred prikazanim številom
-            const tedenZaVelikost = nosecniskiTeden + 1;
+            // 5. Velikost ploda glede na tekoči teden
+            const tedenZaVelikost = nosecniskiTeden;
 
             const podatkiOVelikosti =
                 velikostiPoTednih[tedenZaVelikost] || {
