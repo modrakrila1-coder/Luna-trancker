@@ -74,8 +74,8 @@
     <!-- Logika aplikacije -->
     <script type="module">
 
-        // Prvi dan nosečnosti: 4. september 2026 (uporabljamo UTC za preprečitev težav s časovnimi pasovi)
-        const zadnjaMenstruacija = new Date(Date.UTC(2026, 8, 4));
+        // Prvi dan nosečnosti nastavljen na 3. september 2026, da bo danes (16.10.) pokazalo 6 tednov in 1 dan
+        const zadnjaMenstruacija = new Date(2026, 8, 3, 0, 0, 0, 0);
 
         // Velikost ploda glede na nosečnostni teden
         const velikostiPoTednih = {
@@ -95,18 +95,9 @@
             14: { emoji: "🍋", ime: "Limona", desc: "Začetek drugega tromesečja." }
         };
 
-        function datumBrezUreUTC(datum) {
-            return new Date(Date.UTC(
-                datum.getFullYear(),
-                datum.getMonth(),
-                datum.getDate()
-            ));
-        }
-
         function posodobiTracker() {
-            // Pridobimo današnji datum v UTC, da se izognemo zamikom zaradi lokalne ure/časovnega pasu
             const zdaj = new Date();
-            const danes = new Date(Date.UTC(zdaj.getFullYear(), zdaj.getMonth(), zdaj.getDate()));
+            const danes = new Date(zdaj.getFullYear(), zdaj.getMonth(), zdaj.getDate(), 0, 0, 0, 0);
 
             // 1. Današnji datum za izpis
             const dateOptions = {
@@ -169,26 +160,23 @@
             document.getElementById("headerMoonIcon").textContent = phaseIcon;
 
             // 3. Izračun nosečnosti
-            const prviDan = datumBrezUreUTC(zadnjaMenstruacija);
-            
             const msNaDan = 1000 * 60 * 60 * 24;
-            const dneviOdZacetka = Math.round((danes.getTime() - prviDan.getTime()) / msNaDan);
+            const dneviOdZacetka = Math.round((danes.getTime() - zadnjaMenstruacija.getTime()) / msNaDan);
 
             if (dneviOdZacetka < 0) {
                 document.getElementById("pregnancyProgress").textContent = "Potovanje se še ni začelo";
-                document.getElementById("totalDaysText").textContent = "Prvi dan nosečnosti bo 4. septembra 2026.";
+                document.getElementById("totalDaysText").textContent = "Prvi dan nosečnosti se še ni začel.";
                 document.getElementById("babySizeEmoji").textContent = "🌱";
                 document.getElementById("babySizeText").textContent = "Najino potovanje se bliža";
                 document.getElementById("babySizeDesc").textContent = "Kmalu se začne novo poglavje.";
 
                 const pdp = new Date(zadnjaMenstruacija);
-                pdp.setUTCDate(pdp.getUTCDate() + 280);
+                pdp.setDate(pdp.getDate() + 280);
                 document.getElementById("dueDateText").textContent =
-                    pdp.toLocaleDateString("sl-SI", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+                    pdp.toLocaleDateString("sl-SI", { day: "numeric", month: "long", year: "numeric" });
                 return;
             }
 
-            // Ker je 4. september 1. dan (dneviOdZacetka za 4. sep je 0, skupnoDni je 1)
             const skupnoDni = dneviOdZacetka + 1;
 
             // Izračun tednov in dni
@@ -213,22 +201,20 @@
 
             document.getElementById("pregnancyProgress").textContent = progressText;
 
-            // Tekoči teden
             const tekočiTeden = tedni + 1;
 
             document.getElementById("totalDaysText").textContent =
                 `Skupaj: ${skupnoDni}. dan nosečnosti (v ${tekočiTeden}. tednu)`;
 
-            // 4. Predvideni datum poroda
+            // 4. Predvideni datum poroda (280 dni od začetka)
             const pdp = new Date(zadnjaMenstruacija);
-            pdp.setUTCDate(pdp.getUTCDate() + 279);
+            pdp.setDate(pdp.getDate() + 279);
 
             document.getElementById("dueDateText").textContent =
                 pdp.toLocaleDateString("sl-SI", {
                     day: "numeric",
                     month: "long",
-                    year: "numeric",
-                    timeZone: "UTC"
+                    year: "numeric"
                 });
 
             // 5. Velikost ploda glede na tekoči teden
