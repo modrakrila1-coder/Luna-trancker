@@ -30,7 +30,7 @@
             </div>
         </header>
 
-        <!-- Glavni prikaz nosečnosti (zmanjšani razmaki med vrsticami: space-y-2) -->
+        <!-- Glavni prikaz nosečnosti -->
         <div class="bg-slate-800/80 backdrop-blur-md p-5 rounded-2xl shadow-xl border border-indigo-500/30 mb-6 text-center">
             <h2 class="text-xs font-bold uppercase tracking-wider text-indigo-400 mb-1">
                 Trenutno stanje nosečnosti
@@ -74,8 +74,8 @@
     <!-- Logika aplikacije -->
     <script type="module">
 
-        // Prvi dan nosečnosti: 4. september 2026
-        const zadnjaMenstruacija = new Date(2026, 8, 4);
+        // Prvi dan nosečnosti: 4. september 2026 (uporabljamo UTC za preprečitev težav s časovnimi pasovi)
+        const zadnjaMenstruacija = new Date(Date.UTC(2026, 8, 4));
 
         // Velikost ploda glede na nosečnostni teden
         const velikostiPoTednih = {
@@ -95,18 +95,20 @@
             14: { emoji: "🍋", ime: "Limona", desc: "Začetek drugega tromesečja." }
         };
 
-        function datumBrezUre(datum) {
-            return new Date(
+        function datumBrezUreUTC(datum) {
+            return new Date(Date.UTC(
                 datum.getFullYear(),
                 datum.getMonth(),
                 datum.getDate()
-            );
+            ));
         }
 
         function posodobiTracker() {
-            const danes = datumBrezUre(new Date());
+            // Pridobimo današnji datum v UTC, da se izognemo zamikom zaradi lokalne ure/časovnega pasu
+            const zdaj = new Date();
+            const danes = new Date(Date.UTC(zdaj.getFullYear(), zdaj.getMonth(), zdaj.getDate()));
 
-            // 1. Današnji datum
+            // 1. Današnji datum za izpis
             const dateOptions = {
                 weekday: "long",
                 year: "numeric",
@@ -115,12 +117,12 @@
             };
 
             document.getElementById("currentDateText").textContent =
-                `Danes je ${danes.toLocaleDateString("sl-SI", dateOptions)}`;
+                `Danes je ${zdaj.toLocaleDateString("sl-SI", dateOptions)}`;
 
             // 2. Izračun lunine mene
-            const year = danes.getFullYear();
-            const month = danes.getMonth() + 1;
-            const day = danes.getDate();
+            const year = zdaj.getFullYear();
+            const month = zdaj.getMonth() + 1;
+            const day = zdaj.getDate();
 
             let r = year % 100;
             r %= 19;
@@ -167,11 +169,10 @@
             document.getElementById("headerMoonIcon").textContent = phaseIcon;
 
             // 3. Izračun nosečnosti
-            const prviDan = datumBrezUre(zadnjaMenstruacija);
+            const prviDan = datumBrezUreUTC(zadnjaMenstruacija);
             
-            // Izračun z natančnim deljenjem milisekund (brez napak ur/časovnih pasov)
             const msNaDan = 1000 * 60 * 60 * 24;
-            const dneviOdZacetka = Math.floor((danes.getTime() - prviDan.getTime()) / msNaDan);
+            const dneviOdZacetka = Math.round((danes.getTime() - prviDan.getTime()) / msNaDan);
 
             if (dneviOdZacetka < 0) {
                 document.getElementById("pregnancyProgress").textContent = "Potovanje se še ni začelo";
@@ -181,16 +182,16 @@
                 document.getElementById("babySizeDesc").textContent = "Kmalu se začne novo poglavje.";
 
                 const pdp = new Date(zadnjaMenstruacija);
-                pdp.setDate(pdp.getDate() + 280);
+                pdp.setUTCDate(pdp.getUTCDate() + 280);
                 document.getElementById("dueDateText").textContent =
-                    pdp.toLocaleDateString("sl-SI", { day: "numeric", month: "long", year: "numeric" });
+                    pdp.toLocaleDateString("sl-SI", { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
                 return;
             }
 
             // Ker je 4. september 1. dan (dneviOdZacetka za 4. sep je 0, skupnoDni je 1)
             const skupnoDni = dneviOdZacetka + 1;
 
-            // Izračun tednov in dni (npr. 43 dni -> 6 tednov + 1 dan)
+            // Izračun tednov in dni
             const tedni = Math.floor((skupnoDni - 1) / 7);
             const dnevi = (skupnoDni - 1) % 7;
 
@@ -212,21 +213,22 @@
 
             document.getElementById("pregnancyProgress").textContent = progressText;
 
-            // Tekoči teden (npr. 6 tednov + 1 dan pomeni, da teče 7. teden)
+            // Tekoči teden
             const tekočiTeden = tedni + 1;
 
             document.getElementById("totalDaysText").textContent =
                 `Skupaj: ${skupnoDni}. dan nosečnosti (v ${tekočiTeden}. tednu)`;
 
-            // 4. Predvideni datum poroda (280 dni od začetka)
+            // 4. Predvideni datum poroda
             const pdp = new Date(zadnjaMenstruacija);
-            pdp.setDate(pdp.getDate() + 279);
+            pdp.setUTCDate(pdp.getUTCDate() + 279);
 
             document.getElementById("dueDateText").textContent =
                 pdp.toLocaleDateString("sl-SI", {
                     day: "numeric",
                     month: "long",
-                    year: "numeric"
+                    year: "numeric",
+                    timeZone: "UTC"
                 });
 
             // 5. Velikost ploda glede na tekoči teden
