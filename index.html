@@ -74,8 +74,8 @@
     <!-- Logika aplikacije -->
     <script type="module">
 
-        // Prvi dan nosečnosti nastavljen na 3. september 2026, da bo danes (16.10.) pokazalo 6 tednov in 1 dan
-        const zadnjaMenstruacija = new Date(2026, 8, 3, 0, 0, 0, 0);
+        // Prvi dan nosečnosti: 4. september 2026
+        const zadnjaMenstruacija = new Date(2026, 8, 4, 0, 0, 0, 0);
 
         // Velikost ploda glede na nosečnostni teden
         const velikostiPoTednih = {
@@ -165,7 +165,7 @@
 
             if (dneviOdZacetka < 0) {
                 document.getElementById("pregnancyProgress").textContent = "Potovanje se še ni začelo";
-                document.getElementById("totalDaysText").textContent = "Prvi dan nosečnosti se še ni začel.";
+                document.getElementById("totalDaysText").textContent = "Prvi dan nosečnosti bo 4. septembra 2026.";
                 document.getElementById("babySizeEmoji").textContent = "🌱";
                 document.getElementById("babySizeText").textContent = "Najino potovanje se bliža";
                 document.getElementById("babySizeDesc").textContent = "Kmalu se začne novo poglavje.";
@@ -177,9 +177,9 @@
                 return;
             }
 
-            const skupnoDni = dneviOdZacetka + 1;
+            const skupnoDni = dneviOdZacetka + 1; // za 16.10. je točno 43
 
-            // Izračun tednov in dni
+            // Pravilen izračun tednov in preostalih dni:
             const tedni = Math.floor((skupnoDni - 1) / 7);
             const dnevi = (skupnoDni - 1) % 7;
 
@@ -206,7 +206,7 @@
             document.getElementById("totalDaysText").textContent =
                 `Skupaj: ${skupnoDni}. dan nosečnosti (v ${tekočiTeden}. tednu)`;
 
-            // 4. Predvideni datum poroda (280 dni od začetka)
+            // 4. Predvideni datum poroda (280 dni od začetka, kar znese 10. junij 2027)
             const pdp = new Date(zadnjaMenstruacija);
             pdp.setDate(pdp.getDate() + 279);
 
